@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union
 from datetime import datetime
@@ -9,7 +7,7 @@ class Restaurant(BaseModel):
     res_name: Optional[str] = None
     address: Optional[str] = None
     contact_information: Optional[str] = None
-    restID: Optional[str] = None  # Petpooja sends string like "cp81ghin"
+    restID: Optional[str] = None
 
     class Config:
         extra = "ignore"
@@ -44,7 +42,7 @@ class Order(BaseModel):
     no_of_persons: Optional[Union[int, str]] = None
     discount_total: Optional[Union[int, float]] = None
     tax_total: Optional[Union[int, float]] = None
-    round_off: Optional[Union[str, float, int]] = None  # Petpooja sends as string
+    round_off: Optional[Union[str, float, int]] = None
     core_total: Optional[Union[int, float]] = None
     total: Optional[Union[int, float]] = None
     created_on: Optional[datetime] = None
@@ -57,7 +55,7 @@ class Order(BaseModel):
     service_charge: Optional[Union[int, float]] = None
     biller: Optional[str] = None
     assignee: Optional[str] = None
-    part_payments: List[PartPayment] = Field(default_factory=list)
+    part_payments: List["PartPayment"] = Field(default_factory=list)
 
     class Config:
         extra = "ignore"
@@ -67,7 +65,7 @@ class Addon(BaseModel):
     group_name: Optional[str] = None
     name: Optional[str] = None
     price: Optional[Union[int, float]] = None
-    quantity: Optional[Union[str, int]] = None  # Petpooja sends "1" / "2" as string
+    quantity: Optional[Union[str, int]] = None
     sap_code: Optional[str] = None
     addon_id: Optional[str] = None
     addon_group_id: Optional[str] = None
@@ -85,7 +83,7 @@ class OrderItem(BaseModel):
     price: Optional[Union[int, float]] = None
     quantity: Optional[Union[int, str]] = None
     total: Optional[Union[int, float]] = None
-    addon: List[Addon] = Field(default_factory=list)
+    addon: List["Addon"] = Field(default_factory=list)
     category_name: Optional[str] = None
     sap_code: Optional[str] = None
     discount: Optional[Union[int, float]] = None
@@ -115,12 +113,12 @@ class Discount(BaseModel):
 
 
 class Properties(BaseModel):
-    Restaurant: Optional[Restaurant] = None
-    Customer: Optional[Customer] = None
-    Order: Optional[Order] = None
-    Tax: List[Tax] = Field(default_factory=list)
-    Discount: List[Discount] = Field(default_factory=list)
-    OrderItem: List[OrderItem] = Field(default_factory=list)
+    Restaurant: Optional["Restaurant"] = None
+    Customer: Optional["Customer"] = None
+    Order: Optional["Order"] = None
+    Tax: List["Tax"] = Field(default_factory=list)
+    Discount: List["Discount"] = Field(default_factory=list)
+    OrderItem: List["OrderItem"] = Field(default_factory=list)
 
     class Config:
         extra = "ignore"
@@ -128,8 +126,8 @@ class Properties(BaseModel):
 
 class WebhookPayload(BaseModel):
     token: Optional[str] = None
-    properties: Optional[Properties] = None
-    event: Optional[str] = None  # "orderdetails"
+    properties: Optional["Properties"] = None
+    event: Optional[str] = None
 
     class Config:
         extra = "ignore"
