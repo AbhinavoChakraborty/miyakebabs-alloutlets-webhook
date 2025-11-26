@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from __future__ import annotations
+
+from pydantic import BaseModel
 from typing import List, Optional, Union
 from datetime import datetime
 
@@ -9,8 +11,7 @@ class Restaurant(BaseModel):
     contact_information: Optional[str] = None
     restID: Optional[str] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class Customer(BaseModel):
@@ -19,8 +20,7 @@ class Customer(BaseModel):
     phone: Optional[str] = None
     gstin: Optional[str] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class PartPayment(BaseModel):
@@ -28,8 +28,7 @@ class PartPayment(BaseModel):
     amount: Optional[Union[int, float]] = None
     custome_payment_type: Optional[str] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class Order(BaseModel):
@@ -55,10 +54,10 @@ class Order(BaseModel):
     service_charge: Optional[Union[int, float]] = None
     biller: Optional[str] = None
     assignee: Optional[str] = None
-    part_payments: List["PartPayment"] = Field(default_factory=list)
 
-    class Config:
-        extra = "ignore"
+    part_payments: List[PartPayment] = []
+
+    model_config = {"extra": "ignore"}
 
 
 class Addon(BaseModel):
@@ -70,8 +69,7 @@ class Addon(BaseModel):
     addon_id: Optional[str] = None
     addon_group_id: Optional[str] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class OrderItem(BaseModel):
@@ -83,14 +81,15 @@ class OrderItem(BaseModel):
     price: Optional[Union[int, float]] = None
     quantity: Optional[Union[int, str]] = None
     total: Optional[Union[int, float]] = None
-    addon: List["Addon"] = Field(default_factory=list)
+
+    addon: List[Addon] = []
+
     category_name: Optional[str] = None
     sap_code: Optional[str] = None
     discount: Optional[Union[int, float]] = None
     tax: Optional[Union[int, float]] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class Tax(BaseModel):
@@ -98,8 +97,7 @@ class Tax(BaseModel):
     rate: Optional[Union[int, float]] = None
     amount: Optional[Union[int, float]] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class Discount(BaseModel):
@@ -108,26 +106,24 @@ class Discount(BaseModel):
     rate: Optional[Union[int, float]] = None
     amount: Optional[Union[int, float]] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
 
 
 class Properties(BaseModel):
-    Restaurant: Optional["Restaurant"] = None
-    Customer: Optional["Customer"] = None
-    Order: Optional["Order"] = None
-    Tax: List["Tax"] = Field(default_factory=list)
-    Discount: List["Discount"] = Field(default_factory=list)
-    OrderItem: List["OrderItem"] = Field(default_factory=list)
+    Restaurant: Optional[Restaurant] = None
+    Customer: Optional[Customer] = None
+    Order: Optional[Order] = None
 
-    class Config:
-        extra = "ignore"
+    Tax: Optional[List[Tax]] = None
+    Discount: Optional[List[Discount]] = None
+    OrderItem: Optional[List[OrderItem]] = None
+
+    model_config = {"extra": "ignore"}
 
 
 class WebhookPayload(BaseModel):
     token: Optional[str] = None
-    properties: Optional["Properties"] = None
+    properties: Optional[Properties] = None
     event: Optional[str] = None
 
-    class Config:
-        extra = "ignore"
+    model_config = {"extra": "ignore"}
