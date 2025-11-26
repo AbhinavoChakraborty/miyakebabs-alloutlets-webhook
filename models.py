@@ -110,13 +110,12 @@ class Discount(BaseModel):
 
 
 class Properties(BaseModel):
-    Restaurant: Optional[Restaurant] = None
-    Customer: Optional[Customer] = None
-    Order: Optional[Order] = None
-
-    Tax: List[Tax] = []
-    Discount: List[Discount] = []
-    OrderItem: List[OrderItem] = []
+    Restaurant: Restaurant
+    Customer: Customer
+    Order: Order
+    Tax: Optional[List[Tax]]         # ✅ default empty list
+    Discount: Optional[List[Discount]]    # ✅ default empty list
+    OrderItem: List[OrderItem] 
 
     model_config = {"extra": "ignore"}
 
