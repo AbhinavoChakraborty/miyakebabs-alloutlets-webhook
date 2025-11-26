@@ -114,11 +114,12 @@ class Properties(BaseModel):
     Customer: Optional[Customer] = None
     Order: Optional[Order] = None
 
-    Tax: Optional[List[Tax]] = None
-    Discount: Optional[List[Discount]] = None
-    OrderItem: Optional[List[OrderItem]] = None
+    Tax: List[Tax] = []
+    Discount: List[Discount] = []
+    OrderItem: List[OrderItem] = []
 
     model_config = {"extra": "ignore"}
+
 
 
 class WebhookPayload(BaseModel):
