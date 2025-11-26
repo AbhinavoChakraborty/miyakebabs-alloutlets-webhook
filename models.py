@@ -1,13 +1,18 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional, Union
 from datetime import datetime
+from __future__ import annotations
+
 
 
 class Restaurant(BaseModel):
-    res_name: str
-    address: str
-    contact_information: str
-    restID: str
+    res_name: Optional[str] = None
+    address: Optional[str] = None
+    contact_information: Optional[str] = None
+    restID: Optional[str] = None  # Petpooja sends string like "cp81ghin"
+
+    class Config:
+        extra = "ignore"
 
 
 class Customer(BaseModel):
@@ -16,88 +21,115 @@ class Customer(BaseModel):
     phone: Optional[str] = None
     gstin: Optional[str] = None
 
+    class Config:
+        extra = "ignore"
+
 
 class PartPayment(BaseModel):
-    payment_type: str
-    amount: float
+    payment_type: Optional[str] = None
+    amount: Optional[Union[int, float]] = None
     custome_payment_type: Optional[str] = None
+
+    class Config:
+        extra = "ignore"
 
 
 class Order(BaseModel):
-    orderID: int
-    customer_invoice_id: str
-    delivery_charges: Union[int, float]
-    order_type: str
-    payment_type: str
-    table_no: Optional[str] = None
-    no_of_persons: Optional[int] = None
-    discount_total: Union[int, float]
-    tax_total: Union[int, float]
-    round_off: Union[str, float, int]
-    core_total: Union[int, float]
-    total: Union[int, float]
-    created_on: datetime
-    order_from: str
-    order_from_id: Optional[str] = None
+    orderID: Optional[Union[int, str]] = None
+    customer_invoice_id: Optional[str] = None
+    delivery_charges: Optional[Union[int, float]] = None
+    order_type: Optional[str] = None
+    payment_type: Optional[str] = None
+    table_no: Optional[Union[str, int]] = None
+    no_of_persons: Optional[Union[int, str]] = None
+    discount_total: Optional[Union[int, float]] = None
+    tax_total: Optional[Union[int, float]] = None
+    round_off: Optional[Union[str, float, int]] = None  # Petpooja sends as string
+    core_total: Optional[Union[int, float]] = None
+    total: Optional[Union[int, float]] = None
+    created_on: Optional[datetime] = None
+    order_from: Optional[str] = None
+    order_from_id: Optional[Union[str, int]] = None
     sub_order_type: Optional[str] = None
-    packaging_charge: Union[int, float]
-    status: str
+    packaging_charge: Optional[Union[int, float]] = None
+    status: Optional[str] = None
     comment: Optional[str] = None
-    service_charge: Union[int, float]
+    service_charge: Optional[Union[int, float]] = None
     biller: Optional[str] = None
     assignee: Optional[str] = None
-    part_payments: Optional[List[PartPayment]] = []   # ✅ keep default empty list
+    part_payments: List[PartPayment] = Field(default_factory=list)
+
+    class Config:
+        extra = "ignore"
 
 
 class Addon(BaseModel):
     group_name: Optional[str] = None
-    name: str
-    price: Union[int, float]
-    quantity: Union[str, int]
+    name: Optional[str] = None
+    price: Optional[Union[int, float]] = None
+    quantity: Optional[Union[str, int]] = None  # Petpooja sends "1" / "2" as string
     sap_code: Optional[str] = None
     addon_id: Optional[str] = None
     addon_group_id: Optional[str] = None
 
+    class Config:
+        extra = "ignore"
+
 
 class OrderItem(BaseModel):
-    name: str
-    itemid: int
-    itemcode: str
+    name: Optional[str] = None
+    itemid: Optional[Union[int, str]] = None
+    itemcode: Optional[str] = None
     vendoritemcode: Optional[str] = None
     specialnotes: Optional[str] = None
-    price: Union[int, float]
-    quantity: int
-    total: Union[int, float]
-    addon: Optional[List[Addon]] = []   # ✅ keep default empty list
+    price: Optional[Union[int, float]] = None
+    quantity: Optional[Union[int, str]] = None
+    total: Optional[Union[int, float]] = None
+    addon: List[Addon] = Field(default_factory=list)
     category_name: Optional[str] = None
     sap_code: Optional[str] = None
-    discount: Union[int, float]
-    tax: Union[int, float]
+    discount: Optional[Union[int, float]] = None
+    tax: Optional[Union[int, float]] = None
+
+    class Config:
+        extra = "ignore"
 
 
 class Tax(BaseModel):
-    title: str
-    rate: Union[int, float]
-    amount: Union[int, float]
+    title: Optional[str] = None
+    rate: Optional[Union[int, float]] = None
+    amount: Optional[Union[int, float]] = None
+
+    class Config:
+        extra = "ignore"
 
 
 class Discount(BaseModel):
-    title: str
-    type: str
-    rate: Union[int, float]
-    amount: Union[int, float]
+    title: Optional[str] = None
+    type: Optional[str] = None
+    rate: Optional[Union[int, float]] = None
+    amount: Optional[Union[int, float]] = None
+
+    class Config:
+        extra = "ignore"
 
 
 class Properties(BaseModel):
-    Restaurant: Restaurant
-    Customer: Customer
-    Order: Order
-    Tax: Optional[List[Tax]]        # ✅ default empty list
-    Discount: Optional[List[Discount]]   # ✅ default empty list
-    OrderItem: List[OrderItem]      # ✅ default empty list
+    Restaurant: Optional[Restaurant] = None
+    Customer: Optional[Customer] = None
+    Order: Optional[Order] = None
+    Tax: List[Tax] = Field(default_factory=list)
+    Discount: List[Discount] = Field(default_factory=list)
+    OrderItem: List[OrderItem] = Field(default_factory=list)
+
+    class Config:
+        extra = "ignore"
 
 
 class WebhookPayload(BaseModel):
     token: Optional[str] = None
-    properties: Properties
-    event: str
+    properties: Optional[Properties] = None
+    event: Optional[str] = None  # "orderdetails"
+
+    class Config:
+        extra = "ignore"
