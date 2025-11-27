@@ -66,10 +66,12 @@ class Addon(BaseModel):
     price: Optional[Union[int, float]] = None
     quantity: Optional[Union[str, int]] = None
     sap_code: Optional[str] = None
-    addon_id: Optional[str] = None
-    addon_group_id: Optional[str] = None
+
+    addon_id: Optional[Union[str, int]] = None
+    addon_group_id: Optional[Union[str, int]] = None  
 
     model_config = {"extra": "ignore"}
+
 
 
 class OrderItem(BaseModel):
